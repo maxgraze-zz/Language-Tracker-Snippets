@@ -5,11 +5,13 @@ Install [Datasette](https://datasette.io/)
 
 datasette ~/Library/Application Support/Anki2 folder/data/collection.anki -o
 
-## Tables in the database from [Josh](https://github.com/joshdavham/Short-Data-Analyses/blob/main/How%20does%20the%20word-frequency%20of%20my%20Anki%20cards%20change%20with%20time%3F.ipynb)
+## Tables in the database from [Josh](https://github.com/joshdavham/Short-Data-Analyses/blob/main/How%20does%20the%20word-frequency%20of%20my%20Anki%20cards%20change%20with%20time%3F.ipynb) [Anki Docs]([https://addon-docs.ankiweb.net/](https://docs.ankiweb.net/stats.html))
 ### `cards`
 
 #### Schema
-id -- (*primary key*) card id in epoch miliseconds (corresponding to when the card was created)
+id -- (*primary key*) card id in epoch miliseconds (corresponding to when the card was created). The time at which the review was conducted, as the number of milliseconds that had passed since midnight UTC on January 1, 1970. (This is sometimes known as 'Unix epoch time', especially when in straight seconds instead of milliseconds.)
+
+
 
 nid -- (*foreign key*) the card's corresponding notes id
 
@@ -28,7 +30,8 @@ tags -- whether a note is retired or not
 
 flds -- data contained in the fields of each note
 
-sfld -- ?
+
+![From Anki2 database documentation](https://user-images.githubusercontent.com/18546773/206876257-789e6030-77a8-40f3-be3f-1b03f48197a5.png)
 
 
 ### `revlog`
@@ -37,11 +40,11 @@ sfld -- ?
 
 id -- (*primary key*) when I performed the review in epoch miliseconds (primary key)
 
-cid -- (*foreign key*) cards id corresponding to which card was being reviewed
+cid -- (*foreign key*) The ID of the card that was reviewed. You can look up this value in the id field of the 'cards' table to get more information about the card, although note that the card could have changed between when the revlog entry was recorded and when you are looking it up. It is also the millisecond timestamp of the card’s creation time.
 
 ease -- button pushed when reviewing the card -- review: 1(wrong), 2(hard), 3(ok), 4(easy) -- learn/relearn: 1(wrong), 2(ok), 3(easy)
 
-ivl -- I believe this is the resulting interval for when one will next see the card (but then why are there negative values sometimes??)
+ivl -- The new interval that the card was pushed to after the review. Positive values are in days; negative values are in seconds (for learning cards).
 
 lastIvl -- previous interval
 
